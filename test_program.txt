@@ -2,4 +2,5 @@ VAR foo
 VAR res 
 VAR arg 
 VAR a 
-VAR b
+VAR b b
+FUNC test a 
