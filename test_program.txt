@@ -1,4 +1,3 @@
-VAR foo 0
 VAR a 10
 VAR b 20
-foo EQUAL a ADD b
+WHILE a <= a10000 
