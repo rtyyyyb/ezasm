@@ -50,7 +50,7 @@ for line in program:
     
     if instr[0] == "VAR":
         if len(instr) != 3:
-            sys.exit("Error: expected 3 arguments, got: " + str(len(instr)-1) + " : at line: " + str(program.index(line)+1))
+            sys.exit("Error: expected 2 arguments, got: " + str(len(instr)-1) + " : at line: " + str(program.index(line)+1))
         elif instr[1] in commandwords:
             sys.exit("Error: name \"" + instr[1] + "\" cannot be a command word: at line: " + str(program.index(line)+1))
         elif instr[1] in funcname or instr[1] in variablename:
@@ -74,49 +74,47 @@ for line in program:
         funcname.append(instr[1])    
         funcvariable.append(instr[2])
 
-    if instr[0] == "RET":
+    elif instr[0] == "RET":
         if len(instr) >= 3:
             sys.exit("Error: expected 0-1 arguments, got: " + str(len(instr)-1) + " : at line: " + str(program.index(line)+1))
 
-    if instr[0] == "END":
+    elif instr[0] == "END":
         if len(instr) != 1:
             sys.exit("Error: unexpected token: at line" + str(program.index(line)+1))
         activefunc = False
     
-    if instr[0] == "WHILE":
+    elif instr[0] == "WHILE":
         if len(instr) != 4:
             sys.exit("Error: expected 3 arguments, got: " + str(len(instr)-1) + " : at line: " + str(program.index(line)+1))
-        if (instr[1]) in commandwords:
+        elif instr[1] in commandwords:
             sys.exit("Error: name \"" + instr[1] + "\" cannot be a command word: at line: " + str(program.index(line)+1))
-        if (instr[2]) in commandwords:
+        elif instr[2] in commandwords:
             sys.exit("Error: name \"" + instr[2] + "\" cannot be a command word: at line: " + str(program.index(line)+1))
-        if (instr[3]) in commandwords:
-            sys.exit("Error: name \"" + instr[3] + "\" cannot be a command word: at line: " + str(program.index(line)+1))      
-            
-        if instr[1][0].isalpha():
-            if instr[1] not in variablename:
-                sys.exit("Error: unexpected argument \"" + instr[1] + "\": at line: " + str(program.index(line)+1))
-        elif instr[1].isalpha():
-
+        elif instr[2] not in comparisons:
+            sys.exit("Error: invalid comparison \"" + instr[2] + "\": at line" + str(program.index(line)+1))
+        elif instr[3] in commandwords:
+            sys.exit("Error: name \"" + instr[3] + "\" cannot be a command word: at line: " + str(program.index(line)+1))
+                         
 # second loop
 for line in program: 
     instr = line.split()
     if instr[0] == "VAR":
         print("str m"+ str(variablename.index(instr[1])+1) + " " + instr[2])
-    if instr[0] in variablename:
+    elif instr[0] in variablename:
         if len(instr) != 3 and len(instr) != 5:
-            sys.exit("Error: unexspected token \"" + " ".join(instr) + "\" at line " + str(program.index(line)+1))
+            sys.exit("Error: unexpected token \"" + " ".join(instr) + "\" at line " + str(program.index(line)+1))
         if len(instr) >= 2:
             if instr[1] != "EQUAL":
-                sys.exit("Error: unexspected token \"" + " ".join(instr) + "\" at line " + str(program.index(line)+1))
-            if instr[1] == "EQUAL": 
-                if len(instr) == 5 and instr[3] == "ADD":
-                    add(instr[2],instr[4],instr[0])
-                if len(instr) == 5 and instr[3] == "SUB":
-                    sub(instr[2],instr[4],instr[0])
-                if len(instr) == 5 and instr[3] == "MULT":
-                    mult(instr[2],instr[4],instr[0])
-                if len(instr) == 5 and instr[3] == "DIV":
-                    div(instr[2],instr[4],instr[0])
-                    
-
+                sys.exit("Error: unexpected token \"" + " ".join(instr) + "\" at line " + str(program.index(line)+1))
+            elif instr[1] not in variablename and not instr[1].isnumeric():
+                sys.exit("Error: unexpected argument \"" + instr[1] + "\": at line: " + str(program.index(line)+1))
+            elif instr[3] not in variablename and not instr[3].isnumeric():
+                sys.exit("Error: unexpected argument \"" + instr[3] + "\": at line: " + str(program.index(line)+1)) 
+            elif len(instr) == 5 and instr[3] == "ADD":
+                add(instr[2],instr[4],instr[0])
+            elif len(instr) == 5 and instr[3] == "SUB":
+                sub(instr[2],instr[4],instr[0])
+            elif len(instr) == 5 and instr[3] == "MULT":
+                mult(instr[2],instr[4],instr[0])
+            elif len(instr) == 5 and instr[3] == "DIV":
+                div(instr[2],instr[4],instr[0])
