@@ -1,8 +1,4 @@
-VAR foo 
-VAR res 
-VAR arg 
-VAR a 
-VAR b 
-FUNC test in 
-RET
-FUNC test2 in2
+VAR foo 0
+VAR a 10
+VAR b 20
+foo EQUAL a ADD b
