@@ -26,12 +26,19 @@ with open(programfilepath) as programfile:
 
 #operation functions
 def add(a,b,res):
-    if a not in variablename or b not in variablename or res not in variablename:
-        sys.exit("Error: variable undefined at line " + str(linenum))
-    print("lod r1 m" + str(variablename.index(a)+1))
-    print("lod r2 m" + str(variablename.index(b)+1))
-    print("add r3 r1 r2")
-    print("str m" + str(variablename.index(a)+1) + " r3")
+    if a in variablename:
+        print("lod r1 m" + str(variablename.index(a)+1))
+        arga = "r1"
+    else:
+        arga = str(a)
+
+    if b in variablename:
+        print("lod r2 m" + str(variablename.index(b)+1))
+        argb = "r2"
+    else:
+        argb = str(b)
+    print("add r3 " + str(arga) + " " + str(argb)) 
+    print("str m" + str(variablename.index(res)+1) + " r3")
 
 def sub(a,b,res):
     if a not in variablename or b not in variablename or res not in variablename:
@@ -138,13 +145,11 @@ for lineindex, line in enumerate(program):
             sys.exit("Error: unexpected argument \"" + instr[1] + "\": at line: " + str(linenum))
         elif instr[3] not in variablename and not instr[3].isnumeric():
             sys.exit("Error: unexpected argument \"" + instr[3] + "\": at line: " + str(linenum))
-        
         if instr[1] in variablename:
             print("lod r1 m" + str(variablename.index(instr[1])+1))
             arga = "r1"
         else:
             arga = str(instr[1])
-
         if instr[3] in variablename:
             print("lod r2 m" + str(variablename.index(instr[3])+1))
             argb = "r2"

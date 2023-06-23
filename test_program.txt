@@ -1,6 +1,10 @@
 VAR a 1
 VAR b 0
-WHILE 10 <= 10000 
+VAR count 0
+WHILE count <= 10
+count EQUAL count ADD 1
+WHILE a <= 10000 
 a EQUAL a ADD b
 b EQUAL a ADD b
+END
 END
