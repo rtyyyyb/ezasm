@@ -1,3 +1,6 @@
-VAR a 10
-VAR b 20
-WHILE a <= a10000 
+VAR a 1
+VAR b 0
+WHILE 10 <= 10000 
+a EQUAL a ADD b
+b EQUAL a ADD b
+END
