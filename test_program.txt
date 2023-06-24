@@ -1,12 +1,7 @@
 VAR a 1
-VAR b 0
 VAR res 0
-FUNC myfunc input
-res EQUAL input ADD 1
-RET res
+FUNC main input
+res EQUAL main input
+RET res 
 END
-FUNC main in  
-myfunc in
-RET
-END
-b EQUAL main a
+main a
