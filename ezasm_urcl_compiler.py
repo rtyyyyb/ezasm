@@ -248,11 +248,9 @@ for lineindex, line in enumerate(program):
             argb = "r2"
         else:
             argb = str(instr[3])
-        print(returnstack)
         ifcount += 1
         iflist.append("if" + str(ifcount))
         returnstack.append("if" + str(ifcount))
-        print(returnstack)
         print(comparisondict[instr[2]] + " .end" + str(nearestend[ifcount-1]) + " " +  arga + " " + argb)
 
     elif instr[0] in funcname:
