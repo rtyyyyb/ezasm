@@ -1,7 +1,10 @@
-VAR a 1
-VAR res 0
 FUNC main input
+VAR a 0
+VAR res 0
+a EQUAL a ADD 1
+IF a = 1
 res EQUAL main input
-RET res 
 END
-main a
+RET res
+END
+main 0

@@ -6,6 +6,7 @@ activefunc = False
 variablename = []
 funcname = []
 funcvariable = []
+iflist = []
 commandwords = ["VAR","RET","FUNC","EQUAL","ADD","SUB","MULT","DIV","WHILE"]
 comparisons = ["=","!=",">=","<=",">","<"]
 comparisondict = {
@@ -139,8 +140,21 @@ for lineindex, line in enumerate(program):
             sys.exit("Error: invalid comparison \"" + instr[2] + "\": at line" + str(linenum))
         elif instr[3] in commandwords:
             sys.exit("Error: name \"" + instr[3] + "\" cannot be a command word: at line: " + str(linenum))
+    
+    elif instr[0] == "IF":
+        if len(instr) != 4:
+            sys.exit("Error: expected 3 arguments, got: " + str(len(instr)-1) + " : at line: " + str(linenum))
+        elif instr[1] in commandwords:
+            sys.exit("Error: name \"" + instr[1] + "\" cannot be a command word: at line: " + str(linenum))
+        elif instr[2] in commandwords:
+            sys.exit("Error: name \"" + instr[2] + "\" cannot be a command word: at line: " + str(linenum))
+        elif instr[2] not in comparisons:
+            sys.exit("Error: invalid comparison \"" + instr[2] + "\": at line" + str(linenum))
+        elif instr[3] in commandwords:
+            sys.exit("Error: name \"" + instr[3] + "\" cannot be a command word: at line: " + str(linenum))
                                  
 # second loop
+ifcount = 0
 funccount = 0
 endcount = 0
 for lineindex, line in enumerate(program):
@@ -196,7 +210,7 @@ for lineindex, line in enumerate(program):
         print(comparisondict[instr[2]] + " .end" + str(nearestend[whilecount-1]) + " " +  arga + " " + argb)
     
     elif instr[0] == "END":
-        if returnstack.pop() not in funcname:
+        if (returnstack[len(returnstack)-1] not in funcname) and (returnstack[len(returnstack)-1] not in iflist):
             endcount += 1 
             print("jmp ." + returnstack.pop())
         else: 
@@ -218,8 +232,33 @@ for lineindex, line in enumerate(program):
             else:
                 arg = str(instr[1])
         print("ret")
+    
+    elif instr[0] == "IF":
+        if instr[1] not in variablename and not instr[1].isnumeric():
+            sys.exit("Error: unexpected argument \"" + instr[1] + "\": at line: " + str(linenum))
+        elif instr[3] not in variablename and not instr[3].isnumeric():
+            sys.exit("Error: unexpected argument \"" + instr[3] + "\": at line: " + str(linenum))
+        if instr[1] in variablename:
+            print("lod r1 m" + str(variablename.index(instr[1])+1))
+            arga = "r1"
+        else:
+            arga = str(instr[1])
+        if instr[3] in variablename:
+            print("lod r2 m" + str(variablename.index(instr[3])+1))
+            argb = "r2"
+        else:
+            argb = str(instr[3])
+        print(returnstack)
+        ifcount += 1
+        iflist.append("if" + str(ifcount))
+        returnstack.append("if" + str(ifcount))
+        print(returnstack)
+        print(comparisondict[instr[2]] + " .end" + str(nearestend[ifcount-1]) + " " +  arga + " " + argb)
 
     elif instr[0] in funcname:
-        print("lod r5 m" + str(variablename.index(instr[1])+1))
+        if instr[1] in variablename:
+            print("lod r5 m" + str(variablename.index(instr[1])+1))
+        else:
+            print("imm r5 " + str(instr[1]))
         print("str m" + str(variablename.index(funcvariable[funcname.index(instr[0])])+1) + " r5")
         print("cal ." + instr[0])
