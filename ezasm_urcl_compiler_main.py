@@ -211,11 +211,12 @@ for lineindex, line in enumerate(program):
         print("." + str(instr[1]))
     
     elif instr[0] == "RET":
-        if instr[1] in variablename:
-            print("lod r4 m" + str(variablename.index(instr[1])+1))
-            arg = "r4"
-        else:
-            arg = str(instr[1])
+        if len(instr) == 2:
+            if instr[1] in variablename:
+                print("lod r4 m" + str(variablename.index(instr[1])+1))
+                arg = "r4"
+            else:
+                arg = str(instr[1])
         print("ret")
 
     elif instr[0] in funcname:
