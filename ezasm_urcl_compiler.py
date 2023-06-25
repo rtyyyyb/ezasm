@@ -260,3 +260,6 @@ for lineindex, line in enumerate(program):
             print("imm r5 " + str(instr[1]))
         print("str m" + str(variablename.index(funcvariable[funcname.index(instr[0])])+1) + " r5")
         print("cal ." + instr[0])
+
+    elif instr[0][0] == "/" and instr[0][1] == "/":
+        print(" ".join(instr)) 
