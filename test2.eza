@@ -1,0 +1,24 @@
+VAR variable 10 
+VAR variable2 0
+
+// comment moment
+FUNC function argument
+	IF argument > variable
+		argument EQUAL 10 
+		RET argument
+	END
+	IF argument < 10
+		RET 10
+	END
+	variable EQUAL function argument
+	variable2 EQUAL argument ADD variable
+	RET variable2
+END
+
+FUNC main 
+	WHILE variable2 <= 10
+		function variable
+	END
+	RET
+END
+main

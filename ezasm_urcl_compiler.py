@@ -89,8 +89,11 @@ def div(a,b,res):
 for lineindex, line in enumerate(program):
     linenum = lineindex + 1
     instr = line.split()
-    
-    if instr[0] == "VAR":
+
+    if len(instr) == 0:
+        None
+
+    elif instr[0] == "VAR":
         if len(instr) != 3:
             sys.exit("Error: expected 2 arguments, got: " + str(len(instr)-1) + " : at line: " + str(linenum))
         elif instr[1] in commandwords:
@@ -102,21 +105,23 @@ for lineindex, line in enumerate(program):
         variablename.append(instr[1])
     
     elif instr[0] == "FUNC":
-        if len(instr) != 3:
+        if len(instr) != 3 and len(instr) != 2:
             sys.exit("Error: expected 2 arguments, got: " + str(len(instr)-1) + " :at line: " + str(linenum))
         elif instr[1] in commandwords:
             sys.exit("Error: name \"" + instr[1] + "\" cannot be a command word: at line: " + str(linenum))
         elif instr[1] in funcname or instr[1] in variablename:
             sys.exit("Error: name \"" + instr[1] + "\" already in use: at line: " + str(linenum))
-        elif instr[2] in funcname or instr[2] in variablename:
-            sys.exit("Error: name \"" + instr[2] + "\" already in use: at line: " + str(linenum))
+        elif len(instr) == 3:
+            if instr[2] in funcname or instr[2] in variablename:
+                sys.exit("Error: name \"" + instr[2] + "\" already in use: at line: " + str(linenum))
         elif activefunc == True:
             sys.exit("Error: cannot define a function within a function: at line: " + str(linenum))
         activefunc = True
         endcount += 1 
         nearestend.append(endcount)
-        variablename.append(instr[2])
-        funcvariable.append(instr[2])
+        if len(instr) == 3:
+            variablename.append(instr[2])
+            funcvariable.append(instr[2])
 
     elif instr[0] == "RET":
         if len(instr) >= 3:
@@ -160,9 +165,13 @@ endcount = 0
 for lineindex, line in enumerate(program):
     linenum = lineindex + 1
     instr = line.split()
-
-    if instr[0] == "VAR":
+    
+    if len(instr) == 0:
+        None
+    
+    elif instr[0] == "VAR":
         print("str m"+ str(variablename.index(instr[1])+1) + " " + instr[2])
+    
     elif instr[0] in variablename:
         if len(instr) != 4 and len(instr) != 5 and len(instr) != 3:
             sys.exit("Error: unexpected token \"" + " ".join(instr) + "\" at line " + str(linenum))
@@ -221,16 +230,15 @@ for lineindex, line in enumerate(program):
         funcname.append(instr[1])    
         returnstack.append(str(instr[1]))
         funccount += 1
-        print("jmp .end" + str(nearestend[endcount]) )
+        print("jmp .end" + str(nearestend.pop()-1) )
         print("." + str(instr[1]))
     
     elif instr[0] == "RET":
         if len(instr) == 2:
             if instr[1] in variablename:
                 print("lod r4 m" + str(variablename.index(instr[1])+1))
-                arg = "r4"
             else:
-                arg = str(instr[1])
+                print("imm r4 " + instr[1])
         print("ret")
     
     elif instr[0] == "IF":
@@ -251,14 +259,15 @@ for lineindex, line in enumerate(program):
         ifcount += 1
         iflist.append("if" + str(ifcount))
         returnstack.append("if" + str(ifcount))
-        print(comparisondict[instr[2]] + " .end" + str(nearestend[ifcount-1]) + " " +  arga + " " + argb)
+        print(comparisondict[instr[2]] + " .end" + str(nearestend[ifcount]-1) + " " +  arga + " " + argb)
 
     elif instr[0] in funcname:
-        if instr[1] in variablename:
-            print("lod r5 m" + str(variablename.index(instr[1])+1))
-        else:
-            print("imm r5 " + str(instr[1]))
-        print("str m" + str(variablename.index(funcvariable[funcname.index(instr[0])])+1) + " r5")
+        if len(instr) == 2:
+            if instr[1] in variablename:
+                print("lod r5 m" + str(variablename.index(instr[1])+1))
+            else:
+                print("imm r5 " + str(instr[1]))
+            print("str m" + str(variablename.index(funcvariable[funcname.index(instr[0])])+1) + " r5")
         print("cal ." + instr[0])
 
     elif instr[0][0] == "/" and instr[0][1] == "/":

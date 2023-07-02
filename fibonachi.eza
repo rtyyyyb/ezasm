@@ -1,0 +1,18 @@
+VAR a 0
+VAR temp 0
+VAR temp2 0
+
+FUNC fib n
+    IF n = 0
+        RET 0
+    END
+    IF n = 1
+        RET 1
+    END
+    temp EQUAL n SUB 1
+    temp2 EQUAL n SUB 2
+    temp EQUAL fib temp 
+    temp2 EQUAL fib temp2
+    a EQUAL temp ADD temp2
+    RET a
+END
